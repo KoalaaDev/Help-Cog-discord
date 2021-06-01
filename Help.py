@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import itertools
 
-class CustomHelp(commands.MinimalHelpCommand):
+class MinimalHelpCommand(commands.MinimalHelpCommand):
     async def send_pages(self):
         ctx = self.context
         destination = self.get_destination()
@@ -133,18 +133,3 @@ class CustomHelp(commands.MinimalHelpCommand):
         return f"Thanks for using {ctx.bot.user.name} ❤️ (Total Commands: {len([command for command in ctx.bot.commands if command.hidden == False or command.enabled == True])})"
     async def send_cog_help(self, cog):
         pass
-class Help(commands.Cog):
-    """Help command cog"""
-
-    def __init__(self, client):
-        self.client = client
-        self.client._original_help_command = client.help_command
-        client.help_command = CustomHelp()
-        client.help_command.cog = self
-
-    def cog_unload(self):
-        self.client.help_command = self.client._original_help_command
-
-
-def setup(client):
-    client.add_cog(Help(client))
